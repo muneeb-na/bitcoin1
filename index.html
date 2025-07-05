@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Bitcoin Portfolio</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             background: #0f172a;
@@ -14,16 +20,20 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             text-align: center;
+            padding: 20px;
         }
 
         h1 {
             font-size: 3rem;
+            margin-bottom: 20px;
+            word-break: break-word;
         }
 
         h2 {
             margin-top: 20px;
+            font-size: 2rem;
         }
 
         #price,
@@ -32,6 +42,41 @@
             font-size: 2rem;
             margin-top: 10px;
             transition: all 0.5s ease-in-out;
+            word-break: break-word;
+        }
+
+        /* Responsiveness for tablets */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            #price,
+            #btcValueUSD,
+            #btcValuePKR {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Responsiveness for mobile devices */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            #price,
+            #btcValueUSD,
+            #btcValuePKR {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -47,7 +92,6 @@
     <script>
         const myBitcoin = 0.000030098;
 
-        // Count-up animation function
         function animateValue(element, start, end, duration) {
             let startTimestamp = null;
             const step = (timestamp) => {
@@ -72,21 +116,17 @@
 
         async function fetchBitcoinPrice() {
             try {
-                // Fetch Bitcoin price in USD
                 const btcResponse = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
                 const btcData = await btcResponse.json();
                 const btcPriceUSD = parseFloat(btcData.price);
 
-                // Fetch USD to PKR conversion rate
                 const pkrResponse = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
                 const pkrData = await pkrResponse.json();
                 const usdToPkrRate = pkrData.rates.PKR;
 
-                // Calculate Bitcoin value
                 const myBitcoinValueUSD = myBitcoin * btcPriceUSD;
                 const myBitcoinValuePKR = myBitcoinValueUSD * usdToPkrRate;
 
-                // Animate updates
                 const priceElement = document.getElementById('price');
                 const usdElement = document.getElementById('btcValueUSD');
                 const pkrElement = document.getElementById('btcValuePKR');
@@ -101,7 +141,6 @@
             }
         }
 
-        // Fetch price every 3 seconds
         fetchBitcoinPrice();
         setInterval(fetchBitcoinPrice, 3000);
     </script>
